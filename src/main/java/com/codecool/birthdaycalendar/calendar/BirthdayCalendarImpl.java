@@ -33,19 +33,22 @@ public class BirthdayCalendarImpl implements BirthdayCalendar {
 
     private void fillCalendar(List<User> users, LocalDate startDate, LocalDate endDate) {
         List<LocalDate> days = eachDay(startDate, endDate);
-        System.out.println("In our calendar exist: " + users.size() + " users");
-        for (int i = 0; i < days.size(); i++) {
-            LocalDate day = days.get(i);
-            List<UserAgeDescriptor> usersForDay = new ArrayList<>();
-            for (User user : users) {
-                if (user.birthDate().getMonth().equals(day.getMonth()) &&
-                        user.birthDate().getDayOfMonth() == day.getDayOfMonth()) {
-                    usersForDay.add(userAgeCalculator.createUserAgeDescriptor(user, LocalDate.now()));
+        if(!users.isEmpty()) {
+            System.out.println("In our calendar exist: " + users.size() + " users");
+            for (int i = 0; i < days.size(); i++) {
+                LocalDate day = days.get(i);
+                List<UserAgeDescriptor> usersForDay = new ArrayList<>();
+                for (User user : users) {
+                    if (user.birthDate().getMonth().equals(day.getMonth()) &&
+                            user.birthDate().getDayOfMonth() == day.getDayOfMonth()) {
+                        usersForDay.add(userAgeCalculator.createUserAgeDescriptor(user, LocalDate.now()));
+                    }
                 }
+                if (usersForDay.size() > 0) dates.put(day, usersForDay);
             }
-            if(usersForDay.size()>0)  dates.put(day, usersForDay);
+            System.out.println("The birthday calendar is: " + dates);
         }
-        System.out.println("The birthday calendar is: " + dates);
+        System.out.println("no users in our database");
     }
 
     private static List<LocalDate> eachDay (LocalDate from, LocalDate thru) {
@@ -64,16 +67,19 @@ public class BirthdayCalendarImpl implements BirthdayCalendar {
     public Map<LocalDate, List<UserAgeDescriptor>> getBirthdaysForMonth(int month) {
         Map<LocalDate, List<UserAgeDescriptor>> birthdaysForMonth = new HashMap<>();
 
-        for (Map.Entry<LocalDate, List<UserAgeDescriptor>> entry : dates.entrySet()) {
-            LocalDate date = entry.getKey();
-            List<UserAgeDescriptor> usersForDay = entry.getValue();
+        if(!dates.isEmpty() && month < 13 && month > 0) {
+            for (Map.Entry<LocalDate, List<UserAgeDescriptor>> entry : dates.entrySet()) {
+                LocalDate date = entry.getKey();
+                List<UserAgeDescriptor> usersForDay = entry.getValue();
 
-            if (date.getMonthValue() == month) {
-                birthdaysForMonth.put(date, usersForDay);
+                if (date.getMonthValue() == month) {
+                    birthdaysForMonth.put(date, usersForDay);
+                }
             }
-        }
 
-        return birthdaysForMonth;
+            return birthdaysForMonth;
+        }
+        return null;
     }
 
     @Override
