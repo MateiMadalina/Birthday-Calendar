@@ -7,6 +7,8 @@ import com.codecool.birthdaycalendar.users.UserAgeDescriptor;
 import com.codecool.birthdaycalendar.users.UserRepository;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,29 +32,56 @@ public class BirthdayCalendarImpl implements BirthdayCalendar {
     }
 
     private void fillCalendar(List<User> users, LocalDate startDate, LocalDate endDate) {
-        // TODO: Implement fillCalendar method
+        List<LocalDate> days = eachDay(startDate, endDate);
+        for (int i = 0; i < days.size(); i++) {
+            LocalDate day = days.get(i);
+            List<UserAgeDescriptor> usersForDay = new ArrayList<>();
+            for (User user : users) {
+                if (user.birthDate().getMonth().equals(day.getMonth()) &&
+                        user.birthDate().getDayOfMonth() == day.getDayOfMonth()) {
+                    usersForDay.add(userAgeCalculator.createUserAgeDescriptor(user, LocalDate.now()));
+                }
+            }
+            if(usersForDay.size()>0)  dates.put(day, usersForDay);
+        }
+        System.out.println("The birthday calendar is: " + dates);
     }
 
-    private static List<LocalDate> eachDay(LocalDate from, LocalDate thru) {
-        // TODO: Implement eachDay method
-        return null;
+    private static List<LocalDate> eachDay (LocalDate from, LocalDate thru) {
+        List<LocalDate> d = new ArrayList<>();
+        LocalDate current = from;
+
+        while (!current.isAfter(thru)) {
+            d.add(current);
+            current = current.plusDays(1);
+        }
+
+        return d;
     }
 
     @Override
     public Map<LocalDate, List<UserAgeDescriptor>> getBirthdaysForMonth(int month) {
-        // TODO: Implement getBirthdaysForMonth method
-        return null;
+        Map<LocalDate, List<UserAgeDescriptor>> birthdaysForMonth = new HashMap<>();
+
+        for (Map.Entry<LocalDate, List<UserAgeDescriptor>> entry : dates.entrySet()) {
+            LocalDate date = entry.getKey();
+            List<UserAgeDescriptor> usersForDay = entry.getValue();
+
+            if (date.getMonthValue() == month) {
+                birthdaysForMonth.put(date, usersForDay);
+            }
+        }
+
+        return birthdaysForMonth;
     }
 
     @Override
     public LocalDate getBirthdateForUser(int id) {
-        // TODO: Implement getBirthdateForUser method
-        return null;
+        return userRepository.getById(id).birthDate();
     }
 
     @Override
     public UserAgeDescriptor getUserAgeAtDate(int id, LocalDate date) {
-        // TODO: Implement getUserAgeAtDate method
-        return null;
+        return userAgeCalculator.createUserAgeDescriptor(userRepository.getById(id),date);
     }
 }
