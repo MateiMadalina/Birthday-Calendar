@@ -33,6 +33,7 @@ public class BirthdayCalendarImpl implements BirthdayCalendar {
 
     private void fillCalendar(List<User> users, LocalDate startDate, LocalDate endDate) {
         List<LocalDate> days = eachDay(startDate, endDate);
+        System.out.println("In our calendar exist: " + users.size() + " users");
         for (int i = 0; i < days.size(); i++) {
             LocalDate day = days.get(i);
             List<UserAgeDescriptor> usersForDay = new ArrayList<>();

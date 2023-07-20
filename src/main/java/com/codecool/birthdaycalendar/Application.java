@@ -24,7 +24,7 @@ public class Application {
 
         BirthdayCalendar birthdayCalendar = new BirthdayCalendarImpl(userRepository, userAgeCalculator, 2022);
 
-        System.out.println("Birthdays:\n");
+        System.out.println("\nThe users that celebrate they birthdays in March is:\n");
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         for (Map.Entry<LocalDate, List<UserAgeDescriptor>> entry : birthdayCalendar.getBirthdaysForMonth(Month.MARCH.getValue()).entrySet()) {
@@ -33,7 +33,5 @@ public class Application {
                     .collect(Collectors.joining(", "));
             System.out.println(entry.getKey().format(formatter) + ": " + usersString);
         }
-
-        new Scanner(System.in).nextLine();
     }
 }
