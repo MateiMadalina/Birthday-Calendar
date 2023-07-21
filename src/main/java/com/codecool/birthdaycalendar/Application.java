@@ -6,8 +6,6 @@ import com.codecool.birthdaycalendar.generators.RandomDateGenerator;
 import com.codecool.birthdaycalendar.generators.RandomDateGeneratorImpl;
 import com.codecool.birthdaycalendar.generators.RandomUserGenerator;
 import com.codecool.birthdaycalendar.generators.RandomUserGeneratorImpl;
-import com.codecool.birthdaycalendar.statistics.UserAgeStatisticsService;
-import com.codecool.birthdaycalendar.statistics.UserAgeStatisticsServiceImpl;
 import com.codecool.birthdaycalendar.users.*;
 
 import java.time.LocalDate;
@@ -35,7 +33,5 @@ public class Application {
                     .collect(Collectors.joining(", "));
             System.out.println(entry.getKey().format(formatter) + ": " + usersString);
         }
-
-        UserAgeStatisticsService userAgeStatisticsService = new UserAgeStatisticsServiceImpl(userRepository,userAgeCalculator);
     }
 }

@@ -1,13 +1,11 @@
 package com.codecool.birthdaycalendar.calendar;
 
-import com.codecool.birthdaycalendar.calendar.BirthdayCalendar;
 import com.codecool.birthdaycalendar.users.User;
 import com.codecool.birthdaycalendar.users.UserAgeCalculator;
 import com.codecool.birthdaycalendar.users.UserAgeDescriptor;
 import com.codecool.birthdaycalendar.users.UserRepository;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +33,7 @@ public class BirthdayCalendarImpl implements BirthdayCalendar {
         List<LocalDate> days = eachDay(startDate, endDate);
         if(!users.isEmpty()) {
             System.out.println("In our calendar exist: " + users.size() + " users");
-            for (int i = 0; i < days.size(); i++) {
-                LocalDate day = days.get(i);
+            for (LocalDate day : days) {
                 List<UserAgeDescriptor> usersForDay = new ArrayList<>();
                 for (User user : users) {
                     if (user.birthDate().getMonth().equals(day.getMonth()) &&
