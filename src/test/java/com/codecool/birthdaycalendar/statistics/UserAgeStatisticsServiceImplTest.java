@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,9 +44,37 @@ class UserAgeStatisticsServiceImplTest {
 
     @Test
     void getUsersWithSameAgeInYears() {
+        List<User> users2 = new ArrayList<>();
+        List<User> users1 = new ArrayList<>();
+        users1.add(new User(1,"user1",LocalDate.parse("1999-05-20")));
+        users2.add(new User(2,"user2", LocalDate.parse("2008-05-03")));
+        users1.add(new User(3,"user3",LocalDate.parse("1999-03-21")));
+        users2.add(new User(4,"user4", LocalDate.parse("2008-01-09")));
+        users.add(new User(1,"user1",LocalDate.parse("1999-05-20")));
+        users.add(new User(2,"user2", LocalDate.parse("2008-05-03")));
+        users.add(new User(3,"user3",LocalDate.parse("1999-03-21")));
+        users.add(new User(4,"user4", LocalDate.parse("2008-01-09")));
+
+        Mockito.when(mockedUser.getAll()).thenReturn(users);
+        statisticsService = new UserAgeStatisticsServiceImpl(mockedUser,userAgeCalculator);
+        Map<Integer, List<User>> expected = new HashMap<>();
+        expected.put(24,users1);
+        expected.put(15,users2);
+        assertEquals(expected,statisticsService.getUsersWithSameAgeInYears());
+
     }
 
     @Test
     void getUsersWithSameAgeInDays() {
+        users.add(new User(1,"user1",LocalDate.parse("1999-05-20")));
+        users.add(new User(2,"user2", LocalDate.parse("2008-05-03")));
+
+
+        Mockito.when(mockedUser.getAll()).thenReturn(users);
+        statisticsService = new UserAgeStatisticsServiceImpl(mockedUser,userAgeCalculator);
+        Map<Integer, List<User>> expected = new HashMap<>();
+        expected.put(8828, Collections.singletonList(new User(1, "user1", LocalDate.parse("1999-05-20"))));
+        expected.put(5557, Collections.singletonList(new User(2, "user2", LocalDate.parse("2008-05-03"))));
+        assertEquals(expected,statisticsService.getUsersWithSameAgeInDays());
     }
 }
